@@ -1,0 +1,178 @@
+<!doctype html><html lang='ko'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><title>빛담 가을사진전(E04) 운영 보고서 (최종·정원변경 반영)</title><style>
+:root{
+  --background:210 20% 98%; --foreground:222 20% 18%;
+  --card:0 0% 100%; --muted:210 16% 96%; --muted-foreground:215 14% 46%;
+  --border:214 18% 90%; --primary:222 22% 22%; --primary-foreground:0 0% 100%;
+  --accent:212 20% 94%; --radius:12px;
+  --shadow:0 1px 2px hsl(222 20% 18% / .04), 0 8px 24px hsl(222 20% 18% / .05);
+}
+@media (prefers-color-scheme:dark){
+  :root{--background:222 22% 9%; --foreground:210 16% 92%; --card:222 20% 12%;
+    --muted:222 16% 16%; --muted-foreground:215 14% 62%; --border:222 14% 20%;
+    --primary:210 16% 92%; --primary-foreground:222 22% 12%; --accent:222 16% 18%;
+    --shadow:0 1px 2px hsl(0 0% 0% / .3), 0 8px 24px hsl(0 0% 0% / .35);}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,
+    system-ui,'Segoe UI',sans-serif;
+  margin:0; background:hsl(var(--background)); color:hsl(var(--foreground));
+  line-height:1.6; -webkit-font-smoothing:antialiased; letter-spacing:-.011em;
+}
+/* Flowbite식 스티키 앱바 + Magic UI 은은한 blur/glow */
+.appbar{
+  position:sticky; top:0; z-index:10;
+  padding:24px 32px;
+  background:hsl(var(--background) / .72); backdrop-filter:saturate(160%) blur(12px);
+  border-bottom:1px solid hsl(var(--border));
+}
+.appbar::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,hsl(var(--foreground)/.08),transparent)}
+.appbar h1{margin:0;font-size:20px;font-weight:650;letter-spacing:-.02em}
+.appbar p{margin:8px 0 0;font-size:13px;color:hsl(var(--muted-foreground))}
+main{max-width:1024px;margin:0 auto;padding:32px 16px 48px}
+section{margin-bottom:48px}
+.section-head{display:flex;align-items:baseline;gap:8px;margin:0 0 24px}
+.section-head h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em}
+.section-head .count{font-size:12px;color:hsl(var(--muted-foreground));
+  background:hsl(var(--muted));padding:0 8px;border-radius:999px;line-height:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(304px,1fr));gap:16px}
+/* shadcn Card + Apple 여백 + Magic UI reveal */
+.card{
+  background:hsl(var(--card)); border:1px solid hsl(var(--border));
+  border-radius:var(--radius); padding:24px; box-shadow:var(--shadow);
+  animation:reveal .5s cubic-bezier(.16,1,.3,1) both;
+}
+.card.wide{margin-bottom:16px}
+@keyframes reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+.card h3{margin:0 0 8px;font-size:15px;font-weight:600;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h4{margin:24px 0 8px;font-size:12px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.04em;color:hsl(var(--muted-foreground))}
+.card h4:first-of-type{margin-top:16px}
+.fname{font-size:12px;color:hsl(var(--muted-foreground));
+  font-variant-numeric:tabular-nums;margin-bottom:8px}
+.meta{font-size:12px;color:hsl(var(--muted-foreground));background:hsl(var(--muted));
+  padding:8px 8px;border-radius:8px;margin-bottom:16px}
+.card ul{margin:0;padding-left:16px;font-size:13px}
+.card li{margin-bottom:8px}
+.card li b{font-weight:600}
+/* 핵심 사실 칩 (텍스트 문서의 중요한 키:값) */
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.fact{display:flex;flex-direction:column;gap:0;background:hsl(var(--muted));
+  border:1px solid hsl(var(--border));border-radius:8px;padding:8px 8px;min-width:0}
+.fact-k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;
+  color:hsl(var(--muted-foreground))}
+.fact-v{font-size:13px;font-weight:600;letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums}
+/* 숫자·금액 강조 */
+mark{background:hsl(38 92% 88%);color:hsl(28 74% 26%);padding:0 3px;border-radius:4px;
+  font-weight:600;font-variant-numeric:tabular-nums}
+@media (prefers-color-scheme:dark){
+  mark{background:hsl(38 60% 24%);color:hsl(42 92% 78%)}
+}
+/* CSV 핵심 KPI 카드 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:8px;margin:16px 0 24px}
+.stat{background:linear-gradient(180deg,hsl(var(--muted)),hsl(var(--card)));
+  border:1px solid hsl(var(--border));border-radius:var(--radius);padding:16px;
+  box-shadow:var(--shadow)}
+.stat-v{font-size:22px;font-weight:700;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.stat-k{font-size:11px;font-weight:500;color:hsl(var(--muted-foreground));
+  margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+/* shadcn Badge */
+.tag{font-size:11px;font-weight:500;background:hsl(var(--accent));
+  color:hsl(var(--muted-foreground));padding:0 8px;line-height:20px;border-radius:999px;
+  border:1px solid hsl(var(--border))}
+/* shadcn Table */
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;margin-bottom:8px;
+  font-variant-numeric:tabular-nums;border:1px solid hsl(var(--border));border-radius:8px;overflow:hidden}
+th,td{padding:8px;text-align:left;border-bottom:1px solid hsl(var(--border))}
+tbody tr:last-child td{border-bottom:none}
+th{background:hsl(var(--muted));font-weight:600;font-size:12px;
+  color:hsl(var(--muted-foreground))}
+tbody tr:hover{background:hsl(var(--muted) / .5)}
+td:last-child,th:last-child{text-align:right}
+.note{font-size:12px;color:hsl(var(--muted-foreground));margin:8px 0 16px}
+footer{text-align:center;font-size:12px;color:hsl(var(--muted-foreground));padding:32px 16px}
+</style></head><body><header class="appbar"><h1>빛담 가을사진전(E04) 운영 보고서 (최종·정원변경 반영)</h1><p>documents 문서 요약 · data CSV 핵심 표</p></header><main>
+<section>
+<div class="section-head"><h2>운영 판단 (최종 · 정원변경 반영)</h2><span class="count">기준일 2026-09-23</span></div>
+
+<div class="card wide">
+<h3>변경 전후 판단</h3>
+<table style="width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums">
+<thead><tr style="text-align:left;color:hsl(var(--muted-foreground))"><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">구분</th><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">초기 (~09-22)</th><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">최종 (09-23 이후)</th></tr></thead>
+<tbody>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">유효 정원(운영요원 제외)</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))"><mark>160명</mark></td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))"><mark>180명</mark></td></tr>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">정원 근거</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">APPROVAL-SPACE-04</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">CHANGE-SPACE-04 (대체)</td></tr>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">180명 성격</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">홍보 문구, 미승인</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">정식 변경 승인 완료</td></tr>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">판단 상태</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">"180명 확인 필요"</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">"180명 확정"</td></tr>
+</tbody></table>
+<p class="note">초기에는 변경 승인 기록이 없어(MEMO-04) RULE-02 제2조에 따라 홍보 180명을 인정하지 않고 160명으로 판단. 09-23 CHANGE-SPACE-04 발급으로 요건이 충족되어 180명으로 상향.</p>
+</div>
+
+<div class="card wide">
+<h3>그대로 유지되는 사실 (승인서가 바꾸지 않은 것)</h3>
+<ul>
+<li><b>예산 불변</b>: CHANGE-SPACE-04는 "지원금·예산 증액 승인 문서가 아니다". 지원금 한도는 여전히 <mark>1,500,000원</mark>(APPROVAL-FUND-04), 1차 지급 <mark>1,000,000원</mark>(T091), 잔여 500,000원은 미입금이라 현금 미가산(RULE-01 제5조).</li>
+<li><b>확정 인원 불변</b>: 정원 상향과 무관하게 확정은 여전히 <mark>140명</mark>. 신청자 상태는 승인서·AI 보고서로 자동 변경되지 않음(RULE-02 제3조, CLUB-01 제3조).</li>
+<li><b>재원 잔액 불변</b>: 학교지원금 <mark>250,000원</mark> / 동아리회비 <mark>1,843,000원</mark>. E04 순지출 학교지원금 <mark>750,000원</mark> / 회비 <mark>146,000원</mark>.</li>
+<li><b>지원 제외 규정 불변</b>: 기념품·개인 선물은 학교지원금 대상 아님(RULE-01 제3조), 회비 사용(CLUB-01 제2조).</li>
+</ul>
+</div>
+
+<div class="card wide">
+<h3>질문별 답변과 근거</h3>
+<h4>Q1. 9/23 변경 승인 후, 9/28 E04에 운영요원 제외 최대 몇 명까지 받을 수 있나?</h4>
+<ul>
+<li><b>답: 최대 180명</b> (운영요원 제외).</li>
+<li>적용 문서·조항: <span class="tag">CHANGE-SPACE-04</span>(09-23) "승인 참가 정원을 160명에서 180명으로 변경한다. 운영요원은 별도" — APPROVAL-SPACE-04의 정원 조항을 대체. <span class="tag">RULE-02 제1조</span> 정원은 장소 승인서를 따르며 운영요원 제외 신청 참가자 수. <span class="tag">RULE-02 제2조</span> 대상 행사·적용일 명시된 변경 승인서만 정원을 바꿈 → 요건 충족.</li>
+<li>초기 보고서와 달라진 판단: 초기에는 변경 승인 기록이 없어(<span class="tag">MEMO-04</span> "아직 변경 승인을 받았다는 기록은 없다") 홍보 180명을 인정하지 않고 <mark>160명</mark>으로 판단. 09-23 승인서 발급으로 <mark>180명</mark>으로 상향.</li>
+</ul>
+<h4>Q2. 대기자를 모두 확정해 준비해도 되나?</h4>
+<ul>
+<li><b>답: 정원상으로는 가능하나(140+40=180 = 정원 180), '전원 확정'을 지금 확정 처리해도 되는지는 조건부 — 담당자 승인·재원 확인 전에는 불가.</b></li>
+<li>정원: 대기 40명 전원 전환 시 확정 <mark>180명</mark>으로 신 정원과 정확히 일치(초과 아님). 근거 <span class="tag">CHANGE-SPACE-04</span> <span class="tag">RULE-02 제3조</span>(확정 참가자는 승인 정원 이내).</li>
+<li>참가 현황(집계 JSON): 확정 <mark>140</mark> / 대기 <mark>40</mark> / 취소 20. 확정자 선택 인화체험 105·식음료 112.</li>
+<li>동아리 규칙: <span class="tag">CLUB-01 제3조</span>·<span class="tag">RULE-02 제3조</span> — 대기자 전환은 <b>승인 정원·준비 물품·가용 재원을 함께 확인한 뒤 신청 순서대로</b> 담당자가 승인해 명단 반영. <b>AI 보고서 작성만으로 상태 변경 불가</b>. 전환 전 확정 인원에 미리 더하지 않음(CLUB-01 제1조).</li>
+<li>재원별 잔액: 학교지원금 <mark>250,000원</mark> / 동아리회비 <mark>1,843,000원</mark>.</li>
+<li>구매계획(예정비용): 140명 460,000 · 160명 510,000 · <b>180명 560,000원</b>(학교지원금 312,000 / 회비 248,000). 180명분 학교지원금 312,000원 &gt; 현 지원금 잔액 250,000원 → <b>62,000원 부족</b>. 잔여 지원금 500,000원(정산 후 지급, 현금 미가산·RULE-01 제5조) 또는 회비 보전 필요.</li>
+</ul>
+<h4>Q3. 외부 대학 학생도 이 행사에 참가할 수 있나?</h4>
+<ul>
+<li><b>답: 확인 필요 — 자료로 결정되지 않음.</b></li>
+<li>근거: <span class="tag">MEMO-04</span> "외부인 참가 조건은 이 회의에서 결정하지 않았다." 다른 문서(RULE-01·RULE-02·CLUB-01·APPROVAL/CHANGE-SPACE-04·NOTICE-04)에도 외부 대학생 참가 허용/금지 조항이 없음.</li>
+<li>참고: RULE-01 제1조는 지원금 적용 범위를 '빛담 동아리의 승인된 교내 행사'로, 정원은 '신청 참가자 수'(RULE-02 제1조)로만 규정 — 소속(교내/외부)에 대한 자격 조건은 명시되지 않음.</li>
+<li><b>확인 필요 항목</b>: 외부 대학생 참가 허용 여부·조건(별도 승인 필요 여부, 신청 자격, 안전·보험). 담당자/별도 지침 확인 전까지 미결.</li>
+</ul>
+<h4>구매계획 비교표</h4>
+<table style="width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums">
+<thead><tr style="text-align:left;color:hsl(var(--muted-foreground))"><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">인원</th><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">학교지원금</th><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">동아리회비</th><th style="padding:8px;border-bottom:1px solid hsl(var(--border))">총 예정비용</th></tr></thead>
+<tbody>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">140명 <span class="tag">현 확정</span></td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">256,000</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">204,000</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))"><mark>460,000원</mark></td></tr>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">160명 <span class="tag">구 정원</span></td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">284,000</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">226,000</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))"><mark>510,000원</mark></td></tr>
+<tr><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">180명 <span class="tag">신 정원</span></td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">312,000</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))">248,000</td><td style="padding:8px;border-bottom:1px solid hsl(var(--border))"><mark>560,000원</mark></td></tr>
+</tbody></table>
+<p class="note">수용 상한 180명 vs 현 확정 140명 → 대기 40명 전부 전환 시 정확히 180명(정원과 일치). 참가자 항목=인원×계수×단가, 고정=계수×단가. 구매계획은 예정 수량이며 회계에 합산하지 않음(ACCOUNT-01 제4조).</p>
+</div>
+
+<div class="card wide">
+<h3>추가 확인 사항</h3>
+<ul>
+<li><b>대기 40명 전환 절차</b>: 180명까지 채우려면 담당자 승인으로 신청 순서대로 전환해야 함. AI/보고서만으로 상태 변경 불가(RULE-02 제3조, CLUB-01 제3조).</li>
+<li><b>180명분 예산</b>: 정원은 늘었으나 예산은 미증액. 180명 구매계획(560,000원) 중 학교지원금분 312,000원 vs 현 지원금 잔액 250,000원 → 부족분은 잔여 지원금 입금 또는 회비로 보전 필요.</li>
+<li><b>인화비 용도 미기재 건</b>: 영수증·사용 목적 재확인 후 지원 적격 판단(RULE-01 제4조, MEMO-04).</li>
+<li><b>외부인 참가 조건</b>: MEMO-04에서 미결정. 별도 확인 필요.</li>
+</ul>
+</div>
+
+<div class="card wide">
+<h3>판단 근거 문서</h3>
+<p style="font-size:13px"><span class="tag">CHANGE-SPACE-04</span> 정원 변경(160→180) · <span class="tag">APPROVAL-SPACE-04</span> 원 정원(160) · <span class="tag">RULE-02</span> 정원 규정 · <span class="tag">NOTICE-04</span> 홍보(180) · <span class="tag">MEMO-04</span> 운영회의 · <span class="tag">ACCOUNT-01</span> 회계 기준 · <span class="tag">RULE-01</span> 지원금 지침 · <span class="tag">CLUB-01</span> 운영 규칙 · <span class="tag">APPROVAL-FUND-04</span> 지원금 승인</p>
+</div>
+</section>
+<section><div class="section-head"><h2>문서 요약</h2></div><p class="note">문서 10개. 각 문서의 제목·메타·핵심 사실·조항 본문 발췌입니다. 숫자·금액·정원은 강조 표시했습니다.</p><div class="grid"><div class="card"><h3>빛담 행사 학교 지원금 지침</h3><div class="fname">W04_01_학교지원금지침.md</div><div class="meta">문서 ID: RULE-01 / 시행일: 2026-07-01</div><ul><li><b>제1조 적용 범위</b>: <mark>2026</mark>년 <mark>2</mark>학기 빛담 동아리의 승인된 교내 행사에 적용한다. 행사별 승인서의 사업과 금액 한도 안에서 집행한다.</li><li><b>제2조 지원 대상</b>: 실습 참가자가 사용하는 인화지·잉크·체험 재료, 전시 설치·홍보 인쇄물은 지원 대상이다. 식음료는 확정 참가자용으로 <mark>1인</mark> <mark>4,000원</mark> 이내이며, 최종 정산 시 실제 참석 인원과 증빙을 대조한다. 행사 전 준비를 위한 구매는 가능하나 최종 인정액이 확정된 것은 아니다.</li><li><b>제3조 지원 제외</b>: 기념품·개인 선물·주류·회원 개인 장비는 학교 지원금으로 처리할 수 없다. 동아리 회비 사용은 동아리 규칙에 따른다.</li><li><b>제4조 증빙과 용도</b>: 거래 ID, 행사 ID, 거래일, 금액, 영수증과 구체적 용도가 필요하다. ‘인화비’처럼 용도가 불명확하거나 증빙이 없으면 확인 필요로 보류한다.</li><li><b>제5조 자금 구분</b>: 승인액은 지출 한도다. 승인됐지만 아직 입금되지 않은 금액을 현재 현금에 더하지 않는다. 다른 행사에 배정된 지원금은 전용하지 않는다.</li></ul></div><div class="card"><h3>빛담 행사 공간 이용 안내</h3><div class="fname">W04_02_학교공간이용안내.md</div><div class="meta">문서 ID: RULE-02 / 시행일: 2026-07-01</div><ul><li><b>제1조 참가 정원</b>: 참가자 정원은 해당 행사에 발급된 장소 사용 승인서에 따른다. 여기서 정원은 운영요원을 제외한 신청 참가자 수다.</li><li><b>제2조 변경</b>: 정원 변경 요청·회의 결정·홍보 문구만으로 정원을 바꿀 수 없다. 대상 행사와 적용일이 명시된 변경 승인서가 발급되면 그 범위에서 변경한다.</li><li><b>제3조 준비</b>: 확정 참가자는 승인 정원 이내로 관리한다. 대기자 전환은 담당자가 승인한 뒤 명단에 반영한다. AI 보고서 작성만으로 참가 상태를 변경하지 않는다.</li></ul></div><div class="card"><h3>빛담 동아리 운영 규칙</h3><div class="fname">W04_03_동아리운영규칙.md</div><div class="meta">문서 ID: CLUB-01 / 시행일: 2026-07-01</div><ul><li><b>제1조 참가 확정</b>: 신청 상태는 확정·대기·취소로 구분한다. 물품 구매 기본 인원은 확정 인원이다. 대기자를 포함하는 경우 전환 시나리오를 별도로 계산한다.</li><li><b>제2조 회비</b>: 회비로 행사 기념품을 살 수 있으나 <mark>1인</mark> <mark>3,000원</mark> 이내이며 운영진 결재와 영수증을 갖춘다. 이것은 학교 지원금의 기념품 제외 규정을 바꾸지 않는다.</li><li><b>제3조 대기자 전환</b>: 승인 정원, 준비 물품, 사용 가능한 재원을 함께 확인한 뒤 신청 순서대로 전환한다. 아직 전환되지 않은 사람을 확정 인원에 미리 더하지 않는다.</li><li><b>제4조 기록</b>: 원본 CSV를 보존한다. 제안과 실제 처리 결과를 구분하고 판단 근거를 문서 ID·조항으로 남긴다.</li></ul></div><div class="card"><h3>빛담 가을사진전과 인화 체험 안내</h3><div class="fname">W04_04_행사안내.md</div><div class="meta">문서 ID: NOTICE-04 / 게시일: 2026-09-10 / 행사 ID: E04</div><div class="facts"><div class="fact"><span class="fact-k">행사</span><span class="fact-v">빛담 가을사진전과 인화 체험</span></div><div class="fact"><span class="fact-k">일시</span><span class="fact-v"><mark>2026-09-28 14:00</mark>~<mark>17:00</mark></span></div><div class="fact"><span class="fact-k">장소</span><span class="fact-v">학생회관 전시실</span></div><div class="fact"><span class="fact-k">홍보상 모집 정원</span><span class="fact-v"><mark>180명</mark></span></div></div><ul><li><b></b>인화 체험, 작품 감상, 참여 기념품을 준비한다. 신청자는 확정 안내를 확인해야 한다. 이 안내는 홍보용이며 장소 승인서가 아니다. 운영 검토 기준일은 <mark>2026-09-22</mark>이다.</li></ul></div><div class="card"><h3>빛담 가을사진전 학교 지원금 승인서</h3><div class="fname">W04_05_지원금승인서.md</div><div class="meta">문서 ID: APPROVAL-FUND-04 / 발급일: 2026-09-12 / 행사 ID: E04</div><div class="facts"><div class="fact"><span class="fact-k">총 승인 한도</span><span class="fact-v"><mark>1,500,000원</mark>. 실습 재료, 설치·홍보비, 지침 범위 내 식음료에 사용한다.</span></div></div><ul><li><b>승인 내용</b>: <mark>1</mark>차 지급액: <mark>1,000,000원</mark>. 실제 입금은 회계 CSV의 거래 T<mark>091</mark>로 확인한다. 잔여 <mark>500,000원</mark>은 정산서 승인 후 지급 예정이며 현재 가용 현금으로 계산하지 않는다. 학교 지원금 지침 RULE-<mark>01</mark>을 준수한다. 기념품·개인 선물은 지원 대상에 포함되지 않는다.</li></ul></div><div class="card"><h3>빛담 가을사진전 장소 사용 승인서</h3><div class="fname">W04_06_장소사용승인서.md</div><div class="meta">문서 ID: APPROVAL-SPACE-04 / 발급일: 2026-09-14 / 행사 ID: E04</div><div class="facts"><div class="fact"><span class="fact-k">대상 행사</span><span class="fact-v"><mark>2026-09-28</mark> 빛담 가을사진전과 인화 체험</span></div><div class="fact"><span class="fact-k">장소</span><span class="fact-v">학생회관 전시실</span></div><div class="fact"><span class="fact-k">승인 참가 정원</span><span class="fact-v"><mark>160명</mark> (운영요원 별도)</span></div><div class="fact"><span class="fact-k">사용 시간</span><span class="fact-v"><mark>14:00</mark>~<mark>17:00</mark></span></div></div><ul><li><b>승인 조건</b>: <mark>180명</mark>으로 안내한 홍보물은 현재 승인 조건과 다르므로 정정 검토가 필요하다. 별도의 유효한 변경 승인서가 발급되기 전까지 참가 정원은 <mark>160명</mark>이다.</li></ul></div><div class="card"><h3>빛담 운영회의 메모</h3><div class="fname">W04_07_운영회의메모.md</div><div class="meta">문서 ID: MEMO-04 / 작성일: 2026-09-18 / 행사 ID: E04</div><ul><li><b></b>홍보에는 <mark>180명</mark>으로 안내했지만 현재 장소 승인 정원은 <mark>160명</mark>이다. 대기자를 더 받기 위해 <mark>180명</mark>으로 정원 변경을 요청할 예정이다. 아직 변경 승인을 받았다는 기록은 없다. 기념품은 회비로 처리하는 안을 논의했다. 학교 지원금 사용 가능 여부는 별도 지침을 확인한다. 인화비 중 용도가 적히지 않은 건은 영수증과 사용 목적을 다시 확인한다. 외부인 참가 조건은 이 회의에서 결정하지 않았다.</li></ul></div><div class="card"><h3>빛담 동아리 회계 집계 기준</h3><div class="fname">W04_08_회계기준.md</div><div class="meta">문서 ID: ACCOUNT-01 / 기준일: 2026-09-22</div><ul><li><b>제1조 기간과 기초 잔액</b>: 회계 CSV는 <mark>2026-07-01</mark>~<mark>2026-09-22</mark>의 처리 완료 거래 <mark>120건</mark>이다. 기초 잔액은 <mark>2026-07-01</mark> 직전 학교지원금 <mark>0원</mark>, 동아리회비 <mark>800,000원</mark>이다. 네 행사 E<mark>01</mark>~E<mark>04</mark>의 거래가 섞여 있다.</li><li><b>제2조 부호</b>: 수입·환불입금은 잔액에 더하고, 지출·환불지급은 뺀다. 모든 CSV 금액은 양의 정수 원 단위다. 환불은 원거래_ID와 연결하며 원지출도 유지한다.</li><li><b>제3조 현재 잔액</b>: 재원별 현재 잔액 = 재원별 기초 잔액 + 수입 + 환불입금 - 지출 - 환불지급. E<mark>04</mark>의 순지출과 동아리 전체 잔액을 구분한다. E<mark>04</mark> 재원별 순지출 = 해당 행사의 지출 + 환불지급 - 환불입금이다. 수입은 순지출 계산에서 제외한다. 수입을 포함한 순현금흐름과 구분한다.</li><li><b>제4조 판단</b>: 학교지원금으로 이미 결제했다고 지원 적격이 되는 것은 아니다. 사용 목적·증빙을 지침과 대조한다. 구매계획 CSV는 앞으로 필요한 수량 계산이며 회계 거래나 이미 지급된 비용에 합산하지 않는다.</li><li><b>제5조 구매계획</b>: 수량기준 ‘참가자’는 확정 인원에 계수를 곱한다. ‘고정’은 계수 자체가 수량이다. 단가와 수량의 곱은 예정 비용이다. 추가 참여 시나리오는 별도 계산한다.</li></ul></div><div class="card"><h3>빛담 가을사진전 정원 변경 승인서</h3><div class="fname">W04_09_정원변경승인서.md</div><div class="meta">문서 ID: CHANGE-SPACE-04 / 발급일: 2026-09-23 / 행사 ID: E04</div><ul><li><b></b><mark>2026-09-28</mark> 빛담 가을사진전과 인화 체험에 한하여 학생회관 전시실 및 연결 공간 사용을 승인한다. 승인 참가 정원을 <mark>160명</mark>에서 <mark>180명</mark>으로 변경한다. 운영요원은 별도다. 이 문서는 APPROVAL-SPACE-<mark>04</mark>의 참가 정원 조항을 대체하며 나머지 조건은 유지한다. 지원금·예산 증액을 승인하는 문서는 아니다. 신청자 상태를 자동 변경하지 않는다.</li></ul></div><div class="card"><h3>빛담 가을사진전 정원 변경 승인서</h3><div class="fname">W04_09_정원변경승인서.md</div><div class="meta">문서 ID: CHANGE-SPACE-04 / 발급일: 2026-09-23 / 행사 ID: E04</div><ul><li><b></b><mark>2026-09-28</mark> 빛담 가을사진전과 인화 체험에 한하여 학생회관 전시실 및 연결 공간 사용을 승인한다. 승인 참가 정원을 <mark>160명</mark>에서 <mark>180명</mark>으로 변경한다. 운영요원은 별도다. 이 문서는 APPROVAL-SPACE-<mark>04</mark>의 참가 정원 조항을 대체하며 나머지 조건은 유지한다. 지원금·예산 증액을 승인하는 문서는 아니다. 신청자 상태를 자동 변경하지 않는다.</li></ul></div></div></section><section><div class="section-head"><h2>데이터 집계</h2></div><div class="card wide"><h3>구매계획.csv <span class="tag">구매계획</span></h3><div class="stats"><div class="stat"><div class="stat-v">12개</div><div class="stat-k">구매 예정 항목</div></div><div class="stat"><div class="stat-v">110,000원</div><div class="stat-k">&#x27;고정&#x27; 소계</div></div></div><p class="note">구매 예정 12개 항목. 이미 처리된 회계와 합산하지 않음. 수량기준 '고정' 소계 110,000원.</p><table><thead><tr><th>물품</th><th>수량기준</th><th>계수</th><th>단가</th><th>예정재원</th><th>수량</th><th>예정비용</th></tr></thead><tbody><tr><td>추가 인화지</td><td>참가자</td><td>1</td><td>800원</td><td>학교지원금</td><td>1×확정인원</td><td>(확정인원 필요)</td></tr><tr><td>추가 잉크</td><td>참가자</td><td>1</td><td>400원</td><td>학교지원금</td><td>1×확정인원</td><td>(확정인원 필요)</td></tr><tr><td>보호봉투</td><td>참가자</td><td>1</td><td>200원</td><td>학교지원금</td><td>1×확정인원</td><td>(확정인원 필요)</td></tr><tr><td>기념스티커</td><td>참가자</td><td>1</td><td>1,000원</td><td>동아리회비</td><td>1×확정인원</td><td>(확정인원 필요)</td></tr><tr><td>명찰</td><td>참가자</td><td>1</td><td>100원</td><td>동아리회비</td><td>1×확정인원</td><td>(확정인원 필요)</td></tr><tr><td>전시테이프</td><td>고정</td><td>10</td><td>2,000원</td><td>학교지원금</td><td>10</td><td>20,000원</td></tr><tr><td>포스터</td><td>고정</td><td>20</td><td>1,000원</td><td>학교지원금</td><td>20</td><td>20,000원</td></tr><tr><td>안내판</td><td>고정</td><td>4</td><td>5,000원</td><td>학교지원금</td><td>4</td><td>20,000원</td></tr><tr><td>클립</td><td>고정</td><td>10</td><td>1,000원</td><td>동아리회비</td><td>10</td><td>10,000원</td></tr><tr><td>청소용품</td><td>고정</td><td>2</td><td>5,000원</td><td>동아리회비</td><td>2</td><td>10,000원</td></tr><tr><td>장갑</td><td>고정</td><td>10</td><td>1,000원</td><td>동아리회비</td><td>10</td><td>10,000원</td></tr><tr><td>보관상자</td><td>고정</td><td>2</td><td>10,000원</td><td>동아리회비</td><td>2</td><td>20,000원</td></tr></tbody></table></div><div class="card wide"><h3>참가신청.csv <span class="tag">참가신청</span></h3><div class="stats"><div class="stat"><div class="stat-v">200건</div><div class="stat-k">총 신청</div></div><div class="stat"><div class="stat-v">140명</div><div class="stat-k">확정</div></div><div class="stat"><div class="stat-v">3가지</div><div class="stat-k">신청상태 종류</div></div></div><p class="note">총 신청 200건.</p><h4>신청상태별 인원</h4><table><thead><tr><th>신청상태</th><th>인원</th></tr></thead><tbody><tr><td>확정</td><td>140</td></tr><tr><td>대기</td><td>40</td></tr><tr><td>취소</td><td>20</td></tr></tbody></table><h4>확정 140명 기준 옵션별 신청</h4><table><thead><tr><th>옵션</th><th>값별 인원</th></tr></thead><tbody><tr><td>인화체험</td><td>신청 105, 미신청 35</td></tr><tr><td>식음료</td><td>신청 112, 받지않음 28</td></tr></tbody></table></div><div class="card wide"><h3>회계내역.csv <span class="tag">회계내역</span></h3><div class="stats"><div class="stat"><div class="stat-v">120건</div><div class="stat-k">거래</div></div><div class="stat"><div class="stat-v">2,808,000원</div><div class="stat-k">수입 계열</div></div><div class="stat"><div class="stat-v">1,515,000원</div><div class="stat-k">지출 계열</div></div><div class="stat"><div class="stat-v">1,293,000원</div><div class="stat-k">전체 순액</div></div></div><p class="note">거래 120건. 부호: 수입·환불입금 +, 지출·환불지급 −.</p><h4>유형별 합계(부호 없는 원금액)</h4><table><thead><tr><th>유형</th><th>금액 합</th><th>건수</th></tr></thead><tbody><tr><td>수입</td><td>2,780,000원</td><td>5</td></tr><tr><td>지출</td><td>1,515,000원</td><td>110</td></tr><tr><td>환불입금</td><td>28,000원</td><td>5</td></tr></tbody></table><h4>행사 × 재원 순액</h4><table><thead><tr><th>행사_ID</th><th>재원</th><th>순액</th></tr></thead><tbody><tr><td>E01</td><td>동아리회비</td><td>303,000원</td></tr><tr><td>E02</td><td>동아리회비</td><td>303,000원</td></tr><tr><td>E03</td><td>동아리회비</td><td>303,000원</td></tr><tr><td>E04</td><td>동아리회비</td><td>134,000원</td></tr><tr><td>E04</td><td>학교지원금</td><td>250,000원</td></tr></tbody></table></div></section><footer>data-to-html 스킬로 생성 · 수업용 가상 자료</footer></main></body></html>
