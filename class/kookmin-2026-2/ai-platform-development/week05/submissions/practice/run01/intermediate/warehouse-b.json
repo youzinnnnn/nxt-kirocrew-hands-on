@@ -1,0 +1,18 @@
+{
+  "warehouse": "B",
+  "source_file": "warehouse-b.md",
+  "total": 16,
+  "items": {
+    "mug": 5,
+    "bottle": 9,
+    "hub": 2
+  },
+  "threshold": 5,
+  "low_stock_basis": "warehouse_row",
+  "low_stock": [
+    {
+      "item": "hub",
+      "quantity": 2
+    }
+  ]
+}
