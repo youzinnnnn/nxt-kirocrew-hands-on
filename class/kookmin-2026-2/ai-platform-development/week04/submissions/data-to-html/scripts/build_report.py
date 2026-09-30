@@ -70,14 +70,28 @@ def highlight_nums(s: str) -> str:
     return NUM_RE.sub(lambda m: f"<mark>{m.group(0)}</mark>", s)
 
 
-def summarize_document(path: Path) -> dict:
+def _first_sentence(body: str, max_chars: int = 90) -> str:
+    """문단에서 요지 한 문장만 뽑는다. 첫 종결부호까지, 없으면 max_chars까지."""
+    body = body.strip()
+    if not body:
+        return ""
+    # 한국어/영문 종결부호 기준 첫 문장
+    m = re.search(r"^(.*?[.。!?！？])(\s|$)", body)
+    sent = m.group(1).strip() if m else body
+    if len(sent) > max_chars:
+        sent = sent[:max_chars].rstrip() + "…"
+    return sent
+
+
+def summarize_document(path: Path, detail: str = "brief",
+                       max_clauses: int = 6, max_facts: int = 6) -> dict:
     text = path.read_text(encoding="utf-8", errors="replace")
     lines = [ln.rstrip() for ln in text.splitlines()]
 
     title = path.stem
     meta_line = ""
     facts: list[tuple[str, str]] = []       # (키, 값) 핵심 사실
-    clauses: list[tuple[str, str]] = []     # (조 제목, 본문 전체)
+    clauses: list[tuple[str, str]] = []     # (조 제목, 본문)
 
     for ln in lines:
         s = ln.strip()
@@ -102,18 +116,37 @@ def summarize_document(path: Path) -> dict:
         if fm and any(k in fm.group(1) for k in FACT_KEYWORDS):
             facts.append((fm.group(1).strip(), fm.group(2).strip()))
             continue
-        # 본문: 현재 조에 전체 문장을 이어 붙인다 (첫 문장만 자르지 않음)
+        # 본문: 현재 조에 전체 문장을 이어 붙인다 (요약은 렌더 단계에서)
         if clauses and not clauses[-1][1].endswith(body):
             clauses[-1][1] = (clauses[-1][1] + " " + body).strip() if clauses[-1][1] else body
         elif not clauses:
             clauses.append(["", body])
+
+    clause_pairs = [(h, b) for h, b in clauses if h or b]
+
+    # 요약 모드: 본문을 요지 한 문장으로 줄이고, 조항 수를 제한한다.
+    extra = 0
+    if detail == "brief":
+        summarized = []
+        for h, b in clause_pairs:
+            summarized.append((h, _first_sentence(b)))
+        if len(summarized) > max_clauses:
+            extra = len(summarized) - max_clauses
+            summarized = summarized[:max_clauses]
+        clause_pairs = summarized
+    fact_extra = 0
+    if len(facts) > max_facts:
+        fact_extra = len(facts) - max_facts
+        facts = facts[:max_facts]
 
     return {
         "file": path.name,
         "title": title,
         "meta": meta_line,
         "facts": facts,
-        "clauses": [(h, b) for h, b in clauses if h or b],
+        "fact_extra": fact_extra,
+        "clauses": clause_pairs,
+        "clause_extra": extra,
     }
 
 
@@ -140,12 +173,12 @@ def collect_inputs(paths: list[str]) -> tuple[list[Path], list[Path]]:
     return docs, csvs
 
 
-def render_documents(files: list[Path]) -> str:
+def render_documents(files: list[Path], detail: str = "brief") -> str:
     if not files:
         return ""
     cards = []
     for p in files:
-        d = summarize_document(p)
+        d = summarize_document(p, detail=detail)
         facts = ""
         if d["facts"]:
             chips = "".join(
@@ -153,11 +186,16 @@ def render_documents(files: list[Path]) -> str:
                 f'<span class="fact-v">{highlight_nums(esc(v))}</span></div>'
                 for k, v in d["facts"]
             )
+            if d.get("fact_extra"):
+                chips += (f'<div class="fact"><span class="fact-k">…</span>'
+                          f'<span class="fact-v">외 {d["fact_extra"]}개</span></div>')
             facts = f'<div class="facts">{chips}</div>'
         items = "".join(
             f"<li><b>{esc(h)}</b>{': ' if h and b else ''}{highlight_nums(esc(b))}</li>"
             for h, b in d["clauses"]
         )
+        if d.get("clause_extra"):
+            items += f'<li class="more">…외 {d["clause_extra"]}개 조항 (원문 참조)</li>'
         meta = f'<div class="meta">{esc(d["meta"])}</div>' if d["meta"] else ""
         cards.append(
             f'<div class="card">'
@@ -168,8 +206,9 @@ def render_documents(files: list[Path]) -> str:
             f"<ul>{items}</ul>"
             f"</div>"
         )
+    label = "핵심 요지" if detail == "brief" else "조항 본문"
     return (
-        f'<p class="note">문서 {len(files)}개. 각 문서의 제목·메타·핵심 사실·조항 본문 발췌입니다. '
+        f'<p class="note">문서 {len(files)}개. 각 문서의 제목·메타·핵심 사실과 {label}만 간추렸습니다. '
         f"숫자·금액·정원은 강조 표시했습니다.</p>"
         f'<div class="grid">{"".join(cards)}</div>'
     )
@@ -422,6 +461,7 @@ section{margin-bottom:48px}
 .card ul{margin:0;padding-left:16px;font-size:13px}
 .card li{margin-bottom:8px}
 .card li b{font-weight:600}
+.card li.more{color:hsl(var(--muted-foreground));font-size:12px;list-style:none;margin-left:-16px}
 /* 핵심 사실 칩 (텍스트 문서의 중요한 키:값) */
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
 .fact{display:flex;flex-direction:column;gap:0;background:hsl(var(--muted));
@@ -498,6 +538,8 @@ def main() -> int:
     )
     ap.add_argument("--out", required=True, help="출력 HTML 경로")
     ap.add_argument("--title", default="문서·데이터 요약")
+    ap.add_argument("--detail", choices=["brief", "full"], default="brief",
+                    help="문서 요약 정도: brief(기본, 조항별 요지 한 문장·상위 6개) / full(조항 본문 전체)")
     args = ap.parse_args()
 
     try:
@@ -511,7 +553,7 @@ def main() -> int:
         return 1
 
     try:
-        doc_html = render_documents(docs)
+        doc_html = render_documents(docs, detail=args.detail)
         data_html = render_data(csvs)
     except Exception as e:  # noqa: BLE001
         print(f"처리 오류: {e}", file=sys.stderr)
